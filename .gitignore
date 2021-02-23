@@ -88,4 +88,5 @@ Desktop.ini
 $RECYCLE.BIN/
 # Files that might appear on external disk
 .Spotlight-V100
-.Trashestest/fixtures
+.Trashes
+test/fixtures
