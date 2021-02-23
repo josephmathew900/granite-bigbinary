@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { all, isNil, isEmpty, either } from "ramda";
 
-import Container from "components/Container";
-import Table from "components/Tasks/Table/index";
 import tasksApi from "apis/tasks";
+import Container from "components/Container";
 import PageLoader from "components/PageLoader";
+import Table from "components/Tasks/Table/index";
 
 const Dashboard = ({ history }) => {
   const [pendingTasks, setPendingTasks] = useState([]);
@@ -14,13 +14,21 @@ const Dashboard = ({ history }) => {
   const fetchTasks = async () => {
     try {
       const response = await tasksApi.list();
-      const { pending, completed } = response.data.tasks;
-      setPendingTasks(pending);
-      setCompletedTasks(completed);
+      setPendingTasks(response.data.tasks.pending);
+      setCompletedTasks(response.data.tasks.completed);
     } catch (error) {
       logger.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleProgressToggle = async ({ id, progress }) => {
+    try {
+      await tasksApi.update({ id, payload: { task: { progress } } });
+      await fetchTasks();
+    } catch (error) {
+      logger.error(error);
     }
   };
 
@@ -37,8 +45,17 @@ const Dashboard = ({ history }) => {
     history.push(`/tasks/${id}/show`);
   };
 
-  const updateTask = id => {
-    history.push(`/tasks/${id}/edit`);
+  const starTask = async (id, status) => {
+    try {
+      const toggledStatus = status === "starred" ? "unstarred" : "starred";
+      await tasksApi.update({
+        id,
+        payload: { task: { status: toggledStatus } },
+      });
+      await fetchTasks();
+    } catch (error) {
+      logger.error(error);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +88,7 @@ const Dashboard = ({ history }) => {
           destroyTask={destroyTask}
           showTask={showTask}
           handleProgressToggle={handleProgressToggle}
+          starTask={starTask}
         />
       )}
       {!either(isNil, isEmpty)(completedTasks) && (
