@@ -27,15 +27,15 @@ jobs:
       - run: bundle exec rake db:create db:schema:load --trace
 
       # Yarn install
-      - run: sudo bin/yarn install --cache-folder vendor/node_modules
+      - run: ./bin/yarn install --cache-folder vendor/node_modules
 
       # Generate assets
-      - run: sudo bin/webpack
+      - run: ./bin/webpack
       - run: bundle exec rails webpacker:compile
 
       # Unit tests
       - run:
-          shell: sudo /bin/bash
+          shell: /bin/bash
           command: bundle exec rake test --trace
 workflows:
   version: 2
