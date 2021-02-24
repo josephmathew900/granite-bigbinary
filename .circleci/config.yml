@@ -8,7 +8,7 @@ jobs:
       - image: circleci/ruby:2.7.2-node-browsers
 
     #application directory change it with your application directory name
-    working_directory: ~/granite
+    working_directory: ~/granite_bigbinary
     environment:
       TZ: "/usr/share/zoneinfo/America/New_York"
       RAILS_ENV: "test"
