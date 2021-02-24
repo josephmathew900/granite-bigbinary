@@ -27,9 +27,11 @@ jobs:
       - run: bundle exec rake db:create db:schema:load --trace
 
       # Yarn install
+      - run: sudo chmod +x ./bin/yarn
       - run: ./bin/yarn install --cache-folder vendor/node_modules
 
       # Generate assets
+      - run: sudo chmod +x ./bin/webpack
       - run: ./bin/webpack
       - run: bundle exec rails webpacker:compile
 
