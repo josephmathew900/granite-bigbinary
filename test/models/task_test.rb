@@ -18,7 +18,7 @@ class TaskTest < ActiveSupport::TestCase
 
   def test_not_instance_of_user
     task = Task.new
-    assert_not_instance_of User, task
+    assert_not_instance_of Task, task
   end
 
   def test_value_of_title_assigned
