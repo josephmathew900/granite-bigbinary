@@ -4,6 +4,7 @@ import LoginForm from "components/Authentication/Form/LoginForm";
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
 import { setToLocalStorage } from "helpers/storage";
+import PageLoader from "components/PageLoader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ const Login = () => {
 
   const handleSubmit = async event => {
     event.preventDefault();
+    setLoading(true)
     try {
       const response = await authApi.login({ login: { email, password } });
       setToLocalStorage({
@@ -21,13 +23,20 @@ const Login = () => {
         userName: response.data.user_name,
       });
       setAuthHeaders();
-      setLoading(false);
       window.location.href = "/";
     } catch (error) {
       logger.error(error);
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="h-screen">
+        <PageLoader />
+      </div>
+    );
+  }
 
   return (
     <LoginForm
